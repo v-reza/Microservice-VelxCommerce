@@ -1,0 +1,7 @@
+.transactionPending {
+    color: gray;
+}
+
+.transactionSuccess {
+    color: green
+}

@@ -3,12 +3,28 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.9.3",
+    "@emotion/styled": "^11.9.3",
+    "@mui/icons-material": "^5.8.4",
+    "@mui/lab": "^5.0.0-alpha.88",
+    "@mui/material": "^5.8.4",
+    "@mui/styles": "^5.8.6",
+    "@sweetalert2/theme-material-ui": "^5.0.11",
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^13.5.0",
+    "axios": "^0.27.2",
+    "crypto-js": "^4.1.1",
     "react": "^18.2.0",
+    "react-currency-conv": "^1.1.0",
     "react-dom": "^18.2.0",
+    "react-multi-carousel": "^2.8.2",
+    "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "react-slick": "^0.29.0",
+    "slick-carousel": "^1.8.1",
+    "sweetalert2": "^11.4.18",
+    "swiper": "^8.2.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
@@ -34,5 +50,6 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  }
+  },
+  "proxy": "http://localhost:3300/api"
 }

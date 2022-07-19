@@ -1,0 +1,23 @@
+.shippingContainer {
+    background-color: #ffff;
+    margin: 0 10px 10px;
+    height: 100%;
+}
+
+.cityWrapper {
+    width: 100%;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    /* background-color: #d32026; */
+}
+
+.cityDetail {
+    width: 100%;
+    height: 75px;
+    display: flex;
+    align-items: center;
+    /* background: aqua; */
+    position: relative;
+    margin-left: 10px;
+}
