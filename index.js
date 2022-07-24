@@ -85,7 +85,9 @@ app.get("/store/allUser", async(req, res) => {
   }
 })
 
-
+app.get("/", (req, res) => {
+  res.send("API Running");
+});
 
 app.listen(process.env.PORT || 3300, () => {
   console.log("running");
