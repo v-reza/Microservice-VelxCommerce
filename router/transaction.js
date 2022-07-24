@@ -29,7 +29,7 @@ router.post("/", async (req, res) => {
     const currency = await axios.get(process.env.CURRENCY_URL);
     const IDR = currency.data.rates.IDR;
     const cart = await axios.get(
-      `http://localhost:3300/api/users/cart/${userId}`
+      `https://velxapi.herokuapp.com/api/users/cart/${userId}`
     );
     await cart.data.map((res) => {
       items.push({
@@ -91,7 +91,7 @@ router.post("/callback", async (req, res) => {
 
   try {
     const cart = await axios.get(
-      `http://localhost:3300/api/users/cart/${userId}`
+      `https://velxapi.herokuapp.com/api/users/cart/${userId}`
     );
     let rawCartId = [];
     await cart.data.map((c) => rawCartId.push({ cartId: c._id }));
