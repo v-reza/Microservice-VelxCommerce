@@ -63,6 +63,18 @@ router.get("/", async (req, res) => {
   }
 });
 
+/**
+ * Get bestseller product
+ */
+router.get("/all/bestseller", async (req, res) => {
+  try {
+    const product = await Product.find().sort({product_buying: -1}).limit(5)
+    res.status(200).json(product)
+  } catch (error) {
+    res.status(500).json(error)
+  }
+})
+
 router.get("/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);

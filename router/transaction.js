@@ -182,11 +182,13 @@ router.get("/:orderId", async (req, res) => {
     const sales = await Sales.findOne({
       transactionId: getNewTransaction._id,
     });
-    await sales.updateOne({
-      $set: {
-        transaction_status: getNewTransaction.transaction_status,
-      },
-    });
+    if (sales) {
+      await sales.updateOne({
+        $set: {
+          transaction_status: getNewTransaction.transaction_status,
+        },
+      });
+    }
 
     return res.status(200).json({
       orderId: callbackMidtrans.data.order_id,
@@ -232,10 +234,11 @@ router.post("/user/history", async (req, res) => {
       const sales = await Sales.findOne({
         transactionId: newTransaction._id,
       });
-      console.log(sales);
-      await sales.updateOne({
-        $set: { transaction_status: newTransaction.transaction_status },
-      });
+      if (sales) {
+        await sales.updateOne({
+          $set: { transaction_status: newTransaction.transaction_status },
+        });
+      }
     });
 
     res.status(200).json(transaction);

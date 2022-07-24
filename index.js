@@ -18,6 +18,8 @@ const authRoute = require('./router/auth')
 const userRoute = require('./router/users')
 const transactionRoute = require('./router/transaction')
 const salesRoute = require('./router/sales')
+const conversationsRoute = require('./router/conversations')
+const messagesRoute = require('./router/messages')
 
 dotenv.config();
 
@@ -69,8 +71,18 @@ app.use("/api/auth", authRoute)
 app.use("/api/users", userRoute)
 app.use("/api/transaction", transactionRoute)
 app.use("/api/sales", salesRoute)
+app.use("/api/conversations", conversationsRoute)
+app.use("/api/messages", messagesRoute)
 app.get("/api/storeToken", verifyBearerToken, (req, res) => {
   res.status(200).json(req.user)
+})
+app.get("/store/allUser", async(req, res) => {
+  try {
+    const user = await User.find()
+    res.status(200).json(user)
+  } catch (error) {
+    res.status(500).json(error)
+  }
 })
 
 

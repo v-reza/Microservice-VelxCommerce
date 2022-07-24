@@ -17,6 +17,7 @@ router.post("/addToCart/:productId", async (req, res) => {
   const { userId } = req.body;
   try {
     const product = await Product.findById(req.params.productId);
+    await product.updateOne({ $inc: { product_buying: 1 } });
     const user = await User.findById(userId);
     if (!user) return res.status(404).json("User not found");
 
@@ -26,13 +27,13 @@ router.post("/addToCart/:productId", async (req, res) => {
     const cart = await Cart.findOne({
       userId: userId,
       productId: product._id,
-      status_transaction: false
+      status_transaction: false,
     });
     if (!cart) {
       await Cart.create({
         userId: userId,
         productId: product._id,
-        status_transaction: false
+        status_transaction: false,
       });
     } else {
       await cart.updateOne({ $inc: { qty: 1 } });
@@ -61,14 +62,14 @@ router.get("/cart/:userId", async (req, res) => {
             $toObjectId: "$productId",
           },
           status_transaction: {
-            $toBool: "$status_transaction"
-          }
+            $toBool: "$status_transaction",
+          },
         },
       },
       {
         $match: {
           userId: req.params.userId,
-          status_transaction: false
+          status_transaction: false,
         },
       },
       {
@@ -94,6 +95,9 @@ router.put("/cart/:cartId/:key", async (req, res) => {
 
     if (currentCart.userId === userId) {
       if (req.params.key === "-") {
+        const product = await Product.findById(currentCart.productId);
+        await product.updateOne({ $inc: { product_buying: -1 } });
+
         await currentCart.updateOne({ $inc: { qty: -1 } });
         const afterUpdate = await Cart.findById(req.params.cartId);
         if (afterUpdate.qty === 0) {
@@ -111,7 +115,8 @@ router.put("/cart/:cartId/:key", async (req, res) => {
         }
         return res.status(200).json("success decrement qty");
       }
-
+      const product = await Product.findById(currentCart.productId);
+      await product.updateOne({ $inc: { product_buying: 1 } });
       await currentCart.updateOne({ $inc: { qty: 1 } });
       return res.status(200).json("Success increment qty");
     }
@@ -124,12 +129,17 @@ router.put("/cart/:cartId/:key", async (req, res) => {
 router.delete("/cart/:cartId", async (req, res) => {
   const { userId } = req.body;
   try {
-    const currentCart = await Cart.findById(req.params.cartId);
+    const currentCart = await Cart.findOne({
+      _id: req.params.cartId,
+      status_transaction: false,
+    });
     const user = await User.findById(userId);
     if (currentCart.userId === userId) {
       await user.updateOne({
         $pull: { cart: mongoose.Types.ObjectId(currentCart.productId) },
       });
+      const product = await Product.findById(currentCart.productId);
+      await product.updateOne({ $inc: { product_buying: -currentCart.qty } });
       const productId = currentCart.productId;
       await currentCart.deleteOne();
       return res.status(200).json({
@@ -143,19 +153,20 @@ router.delete("/cart/:cartId", async (req, res) => {
   }
 });
 
-router.put("/cart/:cartId/change/quantity", async (req,res) => {
-  const {userId, qty} = req.body
+router.put("/cart/:cartId/change/quantity", async (req, res) => {
+  const { userId, qty } = req.body;
   try {
-    const currentCart = await Cart.findById(req.params.cartId)
-    const user = await User.findById(userId)
+    const currentCart = await Cart.findById(req.params.cartId);
+    const user = await User.findById(userId);
     if (currentCart.userId === userId) {
-      await currentCart.updateOne({$set: {qty: qty}})
-      return res.status(200).json("success update quantity")
+      await currentCart.updateOne({ $set: { qty: qty } });
+      return res.status(200).json("success update quantity");
     }
-    res.status(404).json("user not found")
+    res.status(404).json("user not found");
   } catch (error) {
-    res.status(500).json(error)
+    res.status(500).json(error);
   }
-})
+});
+
 
 module.exports = router;
