@@ -68,9 +68,9 @@ router.post("/", async (req, res) => {
         phone: "08111222333",
       },
       callbacks: {
-        finish: "http://localhost:3000/checkout/finish",
-        cancel: "http://localhost:3000/checkout/cancel",
-        pending: "http://localhost:3000/checkout/pending",
+        finish: "https://velxcommerce.netlify.app/checkout/finish",
+        cancel: "https://velxcommerce.netlify.app/checkout/cancel",
+        pending: "https://velxcommerce.netlify.app/checkout/pending",
       },
     };
 
