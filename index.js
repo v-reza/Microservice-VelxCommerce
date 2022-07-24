@@ -1,8 +1,8 @@
 const server = require("http").createServer();
 const options = {
   cors: true,
-  origin: ["http://localhost:3000"],
-  origins: ["http://localhost:3000"],
+  origin: ["http://localhost:3000", "https://velxcommerce.netlify.app/"],
+  origins: ["http://localhost:3000", "https://velxcommerce.netlify.app/"],
 };
 
 const io = require("socket.io")(server, options);
