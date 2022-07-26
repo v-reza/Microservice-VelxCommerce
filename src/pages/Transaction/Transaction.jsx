@@ -1,7 +1,6 @@
 import { Button, Grid, LinearProgress } from "@mui/material";
 import axios from "axios";
-import React, { Suspense, useCallback, useContext, useEffect, useState } from "react";
-import Navbar from "../../components/Navbar/Navbar";
+import React, { Suspense, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/UserContext";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";

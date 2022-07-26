@@ -266,6 +266,7 @@ export default function HomeSection() {
                                 <h3 className="text-sm tracking-wide font-medium text-gray-500 uppercase">
                                   Recent Posts
                                 </h3>
+                                {/* eslint-disable-next-line jsx-a11y/no-redundant-roles */}
                                 <ul role="list" className="mt-4 space-y-4">
                                   {recentPosts.map((post) => (
                                     <li
