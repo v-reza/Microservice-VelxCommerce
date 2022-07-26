@@ -1,5 +1,6 @@
 import axios from "axios";
-const api = "http://localhost:3300/api"
+// const api = "http://localhost:3300/api"
+const api = "https://velxapi.herokuapp.com/api"
 
 export async function axiosGet(url, config = null) {
     return await axios.get(api+url, config)
