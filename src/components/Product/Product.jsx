@@ -13,6 +13,11 @@ import Toast from "../../custom/Toast/Toast";
 import Loading from "../../custom/Loading/Loading";
 import { Skeleton } from "@mui/material";
 import { Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import Fullscreen from "@mui/icons-material/Fullscreen";
+import ProductQuickView from "../ProductQuickView/ProductQuickView";
 
 const Product = ({ setNavbarRefresh }) => {
   const [productList, setProductList] = useState([]);
@@ -21,11 +26,16 @@ const Product = ({ setNavbarRefresh }) => {
   const [message, setMessage] = useState("");
   const [isToast, setToast] = useState(false);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const pageCount = 4;
   const [loadMore, setLoadMore] = useState(pageCount);
 
   const folder = useFolder();
+
+  /* Product Quick View */
+  const [openQuickView, setOpenQuickView] = useState(false);
+  const [productQuickView, setProductQuickView] = useState([]);
 
   useEffect(() => {
     const getProducts = async () => {
@@ -60,6 +70,12 @@ const Product = ({ setNavbarRefresh }) => {
     }
   };
 
+  const handleQuickViewProduct = (e, product) => {
+    e.preventDefault();
+    setOpenQuickView(true);
+    setProductQuickView(product);
+  };
+  
   return (
     <>
       <div className="boxSwiperContainer mt-5">
@@ -102,12 +118,37 @@ const Product = ({ setNavbarRefresh }) => {
                       />
                       <div className="boxOverlay">
                         {!user.product.includes(p._id) ? (
-                          <span
-                            className="buyBtn"
-                            onClick={() => buyNow(p._id)}
-                          >
-                            Add to cart
-                          </span>
+                          <>
+                            <ul>
+                              <li className="mb-2">
+                                <span
+                                  className="buyBtn"
+                                  onClick={() => buyNow(p._id)}
+                                >
+                                  <ShoppingCartIcon />
+                                  &nbsp;Add to cart
+                                </span>
+                              </li>
+                              <li className="mb-2">
+                                <span
+                                  className="buyBtn"
+                                  onClick={() => navigate("/detail/product")}
+                                >
+                                  <Fullscreen />
+                                  &nbsp;View Detail
+                                </span>
+                              </li>
+                              <li>
+                                <span
+                                  className="buyBtn"
+                                  onClick={(e) => handleQuickViewProduct(e, p)}
+                                >
+                                  <VisibilityIcon />
+                                  &nbsp;Quick View
+                                </span>
+                              </li>
+                            </ul>
+                          </>
                         ) : (
                           ""
                         )}
@@ -126,6 +167,20 @@ const Product = ({ setNavbarRefresh }) => {
                 </SwiperSlide>
               ))}
         </Swiper>
+        {/* Product Quick View */}
+        <ProductQuickView
+          open={openQuickView}
+          setOpen={setOpenQuickView}
+          products={productQuickView}
+          setNavbarRefresh={setNavbarRefresh}
+          setLoading={setLoading}
+          setToast={setToast}
+          setMessage={setMessage}
+          isToast={isToast}
+          message={message}
+          loading={loading}
+        />
+
         <h1 className="productList  text-3xl font-bold">Product List</h1>
         <div className="productListGrid">
           {productList &&
@@ -142,9 +197,37 @@ const Product = ({ setNavbarRefresh }) => {
                   />
                   <div className="boxOverlay">
                     {!user.product.includes(p._id) ? (
-                      <span className="buyBtn" onClick={() => buyNow(p._id)}>
-                        Add to cart
-                      </span>
+                      <>
+                        <ul>
+                          <li className="mb-2">
+                            <span
+                              className="buyBtn"
+                              onClick={() => buyNow(p._id)}
+                            >
+                              <ShoppingCartIcon />
+                              &nbsp;Add to cart
+                            </span>
+                          </li>
+                          <li className="mb-2">
+                            <span
+                              className="buyBtn"
+                              onClick={() => navigate("/detail/product")}
+                            >
+                              <Fullscreen />
+                              &nbsp;View Detail
+                            </span>
+                          </li>
+                          <li>
+                            <span
+                              className="buyBtn"
+                              onClick={(e) => handleQuickViewProduct(e, p)}
+                            >
+                              <VisibilityIcon />
+                              &nbsp;Quick View
+                            </span>
+                          </li>
+                        </ul>
+                      </>
                     ) : (
                       ""
                     )}

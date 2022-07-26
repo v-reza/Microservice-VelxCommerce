@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import HomeSection from "./components/HomeSection/HomeSection";
 import Navbar from "./components/Navbar/Navbar";
+import ProductDetail from "./components/ProductDetail/ProductDetail";
 import { AuthContext } from "./context/UserContext";
 import Checkout from "./pages/Checkout/Checkout";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -96,6 +97,10 @@ function App() {
           <Route
             path="/checkout/finish"
             element={user ? <Finish /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/detail/product"
+            element={user ? <ProductDetail /> : <Navigate to="/" replace />}
           />
           <Route
             path="*"
