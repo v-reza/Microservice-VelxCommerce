@@ -84,7 +84,7 @@ const Summary = ({ totalPrice, tax, grandTotal, shipping, chooseShipping }) => {
     script.src = snapSrcUrl;
     script.setAttribute("data-client-key", myMidtransClientKey);
     script.async = true;
-
+    script.crossOrigin = "anonymous"
     document.body.appendChild(script);
 
     return () => {

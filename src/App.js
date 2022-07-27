@@ -99,8 +99,21 @@ function App() {
             element={user ? <Finish /> : <Navigate to="/" replace />}
           />
           <Route
-            path="/detail/product"
-            element={user ? <ProductDetail /> : <Navigate to="/" replace />}
+            path="/detail/product/:id"
+            element={
+              user ? (
+                <ProductDetail
+                  navbarRefresh={navbarRefresh}
+                  setNavbarRefresh={setNavbarRefresh}
+                />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
+          <Route
+            path="/404"
+            element={<Notfound setIsNotfound={setIsNotfound} />}
           />
           <Route
             path="*"

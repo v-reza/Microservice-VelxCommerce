@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect, useRef } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -19,10 +19,10 @@ import { axiosPost } from "../../helper/axiosHelper";
 const theme = createTheme();
 
 const Register = () => {
-  const email = useRef();
-  const password = useRef();
-  const fullname = useRef();
-  const navigate = useNavigate()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [fullname, setFullname] = useState("");
+  const navigate = useNavigate();
 
   const { isFetching, error, dispatch } = useContext(AuthContext);
   const [isError, setError] = useState(false);
@@ -30,17 +30,23 @@ const Register = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (email === "" || password === "" || fullname === "") {
+      setError(true);
+      setMessage("Please fill all the fields");
+      return;
+    }
+
     await axiosPost("/auth/register", {
-        email: email.current.value,
-        password: password.current.value,
-        name: fullname.current.value,
-      })
+      email: email,
+      password: password,
+      name: fullname,
+    })
       .then((res) => {
         setError(false);
         loginCall(
           {
-            email: email.current.value,
-            password: password.current.value,
+            email: email,
+            password: password,
           },
           dispatch
         );
@@ -91,7 +97,7 @@ const Register = () => {
                   label="Full Name"
                   name="fullname"
                   autoComplete="family-name"
-                  inputRef={fullname}
+                  onChange={(e) => setFullname(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -102,7 +108,7 @@ const Register = () => {
                   label="Email Address"
                   name="email"
                   autoComplete="email"
-                  inputRef={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -114,7 +120,7 @@ const Register = () => {
                   type="password"
                   id="password"
                   autoComplete="new-password"
-                  inputRef={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </Grid>
             </Grid>
@@ -128,7 +134,7 @@ const Register = () => {
               Sign Up
             </Button>
             <Grid container justifyContent="flex-end">
-              <Grid item style={{ cursor:"pointer" }}>
+              <Grid item style={{ cursor: "pointer" }}>
                 <Link onClick={() => navigate("/login")} variant="body2">
                   Already have an account? Sign in
                 </Link>
