@@ -14,7 +14,7 @@
   }
   ```
 */
-import { Fragment, useContext, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { Dialog, RadioGroup, Transition } from "@headlessui/react";
 import { XIcon } from "@heroicons/react/outline";
 import { StarIcon } from "@heroicons/react/solid";
@@ -63,13 +63,37 @@ export default function ProductQuickView({
   isToast,
   message,
   loading,
+  setError,
 }) {
   const folder = useFolder();
-  const [selectedColor, setSelectedColor] = useState(product.colors[0]);
-  const [selectedSize, setSelectedSize] = useState(product.sizes[2]);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedSize, setSelectedSize] = useState(null);
   const { user, dispatch } = useContext(AuthContext);
-  
+  const [productColor, setProductColor] = useState([]);
+  const [productSize, setProductSize] = useState([]);
+
+  useEffect(() => {
+    setProductColor(products.product_color);
+    setProductSize(products.product_size);
+  }, [products]);
+
+  const handleSelectedColor = (e, color) => {
+    e.preventDefault();
+    setSelectedColor(color);
+  };
+
+  const handleSelectedSize = (e, size) => {
+    e.preventDefault();
+    setSelectedSize(size);
+  };
+
   const buyNow = async (productId) => {
+    if (!selectedColor || !selectedSize) {
+      setError(true);
+      setToast(true);
+      setMessage("Please select color and size");
+      return;
+    }
     try {
       setLoading(true);
       await axiosPost(`/users/addToCart/${productId}`, {
@@ -79,6 +103,7 @@ export default function ProductQuickView({
       if (!user.cart.includes(productId)) {
         dispatch({ type: "ADD_CART", payload: productId });
       }
+      setError(false);
       setLoading(false);
       setToast(true);
       setMessage("Success Add to cart ");
@@ -176,9 +201,7 @@ export default function ProductQuickView({
                               <p className="sr-only">
                                 {product.rating} out of 5 stars
                               </p>
-                              <div
-                                className="cursor-pointer ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500"
-                              >
+                              <div className="cursor-pointer ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
                                 {product.reviewCount} reviews
                               </div>
                             </div>
@@ -200,42 +223,35 @@ export default function ProductQuickView({
                                 Color
                               </h4>
 
-                              <RadioGroup
-                                value={selectedColor}
-                                onChange={setSelectedColor}
-                                className="mt-4"
-                              >
+                              <RadioGroup className="mt-4">
                                 <RadioGroup.Label className="sr-only">
                                   Choose a color
                                 </RadioGroup.Label>
                                 <span className="flex items-center space-x-3">
-                                  {product.colors.map((color) => (
+                                  {productColor?.map((color, index) => (
                                     <RadioGroup.Option
-                                      key={color.name}
+                                      key={index}
                                       value={color}
-                                      className={({ active, checked }) =>
-                                        classNames(
-                                          color.selectedClass,
-                                          active && checked
-                                            ? "ring ring-offset-1"
-                                            : "",
-                                          !active && checked ? "ring-2" : "",
-                                          "-m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none"
-                                        )
+                                      className={classNames(
+                                        color === selectedColor
+                                          ? "ring ring-offset-1 ring-2 ring-gray-400"
+                                          : "",
+                                        "-m-0.5 relative p-0.5 rounded-full flex items-center justify-center cursor-pointer focus:outline-none"
+                                      )}
+                                      onClick={(e) =>
+                                        handleSelectedColor(e, color)
                                       }
                                     >
                                       <RadioGroup.Label
                                         as="span"
                                         className="sr-only"
                                       >
-                                        {color.name}
+                                        Color
                                       </RadioGroup.Label>
                                       <span
                                         aria-hidden="true"
-                                        className={classNames(
-                                          color.class,
-                                          "h-8 w-8 border border-black border-opacity-10 rounded-full"
-                                        )}
+                                        className="h-8 w-8 border border-black border-opacity-10 rounded-full"
+                                        style={{ backgroundColor: `#${color}` }}
                                       />
                                     </RadioGroup.Option>
                                   ))}
@@ -254,71 +270,36 @@ export default function ProductQuickView({
                                 </div>
                               </div>
 
-                              <RadioGroup
-                                value={selectedSize}
-                                onChange={setSelectedSize}
-                                className="mt-4"
-                              >
+                              <RadioGroup className="mt-4">
                                 <RadioGroup.Label className="sr-only">
                                   Choose a size
                                 </RadioGroup.Label>
                                 <div className="grid grid-cols-4 gap-4">
-                                  {product.sizes.map((size) => (
+                                  {productSize?.map((size, index) => (
                                     <RadioGroup.Option
-                                      key={size.name}
+                                      key={index}
                                       value={size}
-                                      disabled={!size.inStock}
-                                      className={({ active }) =>
-                                        classNames(
-                                          size.inStock
-                                            ? "bg-white shadow-sm text-gray-900 cursor-pointer"
-                                            : "bg-gray-50 text-gray-200 cursor-not-allowed",
-                                          active
-                                            ? "ring-2 ring-indigo-500"
-                                            : "",
-                                          "group relative border rounded-md py-3 px-4 flex items-center justify-center text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1"
-                                        )
+                                      onClick={(e) =>
+                                        handleSelectedSize(e, size)
                                       }
+                                      // disabled={!size.inStock}
+                                      className="bg-white shadow-sm text-gray-900 cursor-pointer group relative border rounded-md py-3 px-4 flex items-center justify-center text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1"
                                     >
-                                      {({ active, checked }) => (
-                                        <>
-                                          <RadioGroup.Label as="span">
-                                            {size.name}
-                                          </RadioGroup.Label>
-                                          {size.inStock ? (
-                                            <span
-                                              className={classNames(
-                                                active ? "border" : "border-2",
-                                                checked
-                                                  ? "border-indigo-500"
-                                                  : "border-transparent",
-                                                "absolute -inset-px rounded-md pointer-events-none"
-                                              )}
-                                              aria-hidden="true"
-                                            />
-                                          ) : (
-                                            <span
-                                              aria-hidden="true"
-                                              className="absolute -inset-px rounded-md border-2 border-gray-200 pointer-events-none"
-                                            >
-                                              <svg
-                                                className="absolute inset-0 w-full h-full text-gray-200 stroke-2"
-                                                viewBox="0 0 100 100"
-                                                preserveAspectRatio="none"
-                                                stroke="currentColor"
-                                              >
-                                                <line
-                                                  x1={0}
-                                                  y1={100}
-                                                  x2={100}
-                                                  y2={0}
-                                                  vectorEffect="non-scaling-stroke"
-                                                />
-                                              </svg>
-                                            </span>
+                                      <>
+                                        <RadioGroup.Label as="span">
+                                          {size}
+                                        </RadioGroup.Label>
+
+                                        <span
+                                          className={classNames(
+                                            size === selectedSize
+                                              ? "border-2 border-indigo-500"
+                                              : "",
+                                            "absolute -inset-px rounded-md"
                                           )}
-                                        </>
-                                      )}
+                                          aria-hidden="true"
+                                        />
+                                      </>
                                     </RadioGroup.Option>
                                   ))}
                                 </div>

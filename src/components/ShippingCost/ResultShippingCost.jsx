@@ -1,3 +1,4 @@
+import { Skeleton } from "@mui/material";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import Loading from "../../custom/Loading/Loading";
@@ -12,7 +13,7 @@ const ResultShippingCost = ({
   destination,
   weight,
   setPriceShipping,
-  setChooseShipping
+  setChooseShipping,
 }) => {
   const [IDR, setIDR] = useState();
   useEffect(() => {
@@ -39,7 +40,7 @@ const ResultShippingCost = ({
         setServiceChoose("");
         return;
       }
-  
+
       setLoading(true);
       const res = await axiosPost(`/rajaongkir/ongkir/${indexShipping}`, {
         origin: origin,
@@ -52,12 +53,11 @@ const ResultShippingCost = ({
       setMessage("Success choose shipping price");
       setChooseShipping(res.data);
       setServiceChoose(res.data.service);
-      
     } catch (error) {
-      setLoading(true)
-      setToast(true)
-      setError(true)
-      setMessage("Something when wrong when choose shipping")
+      setLoading(true);
+      setToast(true);
+      setError(true);
+      setMessage("Something when wrong when choose shipping");
     }
   };
 
@@ -76,12 +76,24 @@ const ResultShippingCost = ({
             className="flex p-3 border border-gray-200 rounded-md bg-gray-50 hover:border-blue-400 hover:bg-blue-50 cursor-pointer"
           >
             <span>
-              <input name="shipping" type="radio" className="h-4 w-4 mt-1" checked={list.service === serviceChoose}/>
+              <input
+                name="shipping"
+                type="radio"
+                className="h-4 w-4 mt-1"
+                checked={list.service === serviceChoose}
+                onChange={() => {}}
+              />
             </span>
             <p className="ml-2">
               <span>{code.toUpperCase()}</span>
               <small className="block text-sm text-gray-400">
-                ${(list.cost[0].value / IDR).toFixed(2)} -{" "}
+                $
+                {isNaN(list.cost[0].value) ? (
+                  <Skeleton variant="text" />
+                ) : (
+                  (list.cost[0].value / IDR).toFixed(2)
+                )}{" "}
+                -{" "}
                 {code.toUpperCase() !== "POS"
                   ? list.cost[0].etd + " day"
                   : list.cost[0].etd.replace("HARI", "day")}

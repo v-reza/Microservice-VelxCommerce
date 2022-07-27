@@ -6,7 +6,7 @@ import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
-import { axiosGet, axiosPost } from "../../helper/axiosHelper";
+import { axiosGet } from "../../helper/axiosHelper";
 import { useFolder } from "../../helper/useFolder";
 import { AuthContext } from "../../context/UserContext";
 import Toast from "../../custom/Toast/Toast";
@@ -15,17 +15,17 @@ import { Skeleton } from "@mui/material";
 import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import VisibilityIcon from "@mui/icons-material/Visibility";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import Fullscreen from "@mui/icons-material/Fullscreen";
 import ProductQuickView from "../ProductQuickView/ProductQuickView";
 
 const Product = ({ setNavbarRefresh }) => {
   const [productList, setProductList] = useState([]);
   const [productBestSeller, setProductBestSeller] = useState([]);
-  const { user, dispatch } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [message, setMessage] = useState("");
   const [isToast, setToast] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
   const navigate = useNavigate();
 
   const pageCount = 4;
@@ -51,31 +51,12 @@ const Product = ({ setNavbarRefresh }) => {
     getProducts();
   }, []);
 
-  const buyNow = async (productId) => {
-    try {
-      setLoading(true);
-      await axiosPost(`/users/addToCart/${productId}`, {
-        userId: user._id,
-      });
-
-      if (!user.cart.includes(productId)) {
-        dispatch({ type: "ADD_CART", payload: productId });
-      }
-      setLoading(false);
-      setToast(true);
-      setMessage("Success Add to cart ");
-      setNavbarRefresh(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const handleQuickViewProduct = (e, product) => {
     e.preventDefault();
     setOpenQuickView(true);
     setProductQuickView(product);
   };
-  
+
   return (
     <>
       <div className="boxSwiperContainer mt-5">
@@ -123,16 +104,9 @@ const Product = ({ setNavbarRefresh }) => {
                               <li className="mb-2">
                                 <span
                                   className="buyBtn"
-                                  onClick={() => buyNow(p._id)}
-                                >
-                                  <ShoppingCartIcon />
-                                  &nbsp;Add to cart
-                                </span>
-                              </li>
-                              <li className="mb-2">
-                                <span
-                                  className="buyBtn"
-                                  onClick={() => navigate("/detail/product")}
+                                  onClick={() =>
+                                    navigate("/detail/product/" + p._id)
+                                  }
                                 >
                                   <Fullscreen />
                                   &nbsp;View Detail
@@ -179,6 +153,7 @@ const Product = ({ setNavbarRefresh }) => {
           isToast={isToast}
           message={message}
           loading={loading}
+          setError={setError}
         />
 
         <h1 className="productList  text-3xl font-bold">Product List</h1>
@@ -199,15 +174,6 @@ const Product = ({ setNavbarRefresh }) => {
                     {!user.product.includes(p._id) ? (
                       <>
                         <ul>
-                          <li className="mb-2">
-                            <span
-                              className="buyBtn"
-                              onClick={() => buyNow(p._id)}
-                            >
-                              <ShoppingCartIcon />
-                              &nbsp;Add to cart
-                            </span>
-                          </li>
                           <li className="mb-2">
                             <span
                               className="buyBtn"
@@ -262,7 +228,7 @@ const Product = ({ setNavbarRefresh }) => {
           open={isToast}
           setOpen={setToast}
           message={message}
-          variant="success"
+          variant={error ? "error" : "success"}
         />
         <Loading open={loading} setOpen={setLoading} />
       </div>
