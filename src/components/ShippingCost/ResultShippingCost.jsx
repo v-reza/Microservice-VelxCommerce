@@ -88,7 +88,7 @@ const ResultShippingCost = ({
               <span>{code.toUpperCase()}</span>
               <small className="block text-sm text-gray-400">
                 $
-                {isNaN(list.cost[0].value) ? (
+                {isNaN(list.cost[0].value / IDR) ? (
                   <Skeleton variant="text" />
                 ) : (
                   (list.cost[0].value / IDR).toFixed(2)
