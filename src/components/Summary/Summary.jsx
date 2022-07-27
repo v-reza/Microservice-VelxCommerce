@@ -1,5 +1,6 @@
 import { Button } from "@mui/material";
 import React, { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/UserContext";
 import Loading from "../../custom/Loading/Loading";
 import Toast from "../../custom/Toast/Toast";
@@ -11,6 +12,7 @@ const Summary = ({ totalPrice, tax, grandTotal, shipping, chooseShipping }) => {
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const navigate = useNavigate()
 
   const handlePay = async (e) => {
     e.preventDefault();
@@ -40,6 +42,8 @@ const Summary = ({ totalPrice, tax, grandTotal, shipping, chooseShipping }) => {
           axiosPost('/transaction/callback', {
             result: result,
             userId: user._id
+          }).then((res) => {
+            navigate("/checkout/finish?order_id=" + res.data.order_id)
           })
         },
         onPending: function (result) {
@@ -47,6 +51,8 @@ const Summary = ({ totalPrice, tax, grandTotal, shipping, chooseShipping }) => {
           axiosPost('/transaction/callback', {
             result: result,
             userId: user._id
+          }).then((res) => {
+            navigate("/checkout/finish?order_id=" + res.data.order_id)
           })
         },
         onError: function (result) {
@@ -54,6 +60,8 @@ const Summary = ({ totalPrice, tax, grandTotal, shipping, chooseShipping }) => {
           axiosPost('/transaction/callback', {
             result: result,
             userId: user._id
+          }).then((res) => {
+            navigate("/checkout/finish?order_id=" + res.data.order_id)
           })
         },
         onClose: function () {
