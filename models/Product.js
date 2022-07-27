@@ -32,7 +32,19 @@ const ProductSchema = new mongoose.Schema(
         product_buying: {
             type: Number,
             default: 0
-        }
+        },
+        product_color: {
+            type: Array,
+            default: []
+        },
+        product_size: {
+            type: Array,
+            default: []
+        },
+        product_list_image: {
+            type: Array,
+            default: []
+        },
     },
     {timestamps: true}
 )

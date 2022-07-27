@@ -30,21 +30,20 @@ router.get("/by/userId", verifyBearerToken, async (req, res) => {
     const user = await User.aggregate([
       {
         $match: {
-          _id: mongoose.Types.ObjectId(req.user.userId)
-        }
+          _id: mongoose.Types.ObjectId(req.user.userId),
+        },
       },
       {
         $lookup: {
           from: "products",
           localField: "product",
           foreignField: "_id",
-          as: "product"
-        }
-      }
-    ])
+          as: "product",
+        },
+      },
+    ]);
 
-    res.status(200).json(user)
-    
+    res.status(200).json(user);
   } catch (error) {
     console.log(error);
     res.status(500).json(error);
@@ -68,12 +67,12 @@ router.get("/", async (req, res) => {
  */
 router.get("/all/bestseller", async (req, res) => {
   try {
-    const product = await Product.find().sort({product_buying: -1}).limit(5)
-    res.status(200).json(product)
+    const product = await Product.find().sort({ product_buying: -1 }).limit(5);
+    res.status(200).json(product);
   } catch (error) {
-    res.status(500).json(error)
+    res.status(500).json(error);
   }
-})
+});
 
 router.get("/:id", async (req, res) => {
   try {
@@ -131,15 +130,18 @@ router.get("/list/category", async (req, res) => {
   }
 });
 
-router.delete("/:productId", verifyBearerToken, async(req,res) => {
+router.delete("/:productId", verifyBearerToken, async (req, res) => {
   try {
-    const product = await Product.findById(req.params.productId)
-    await product.deleteOne()
-    res.status(200).json("success delete product")
+    const user = await User.findById(req.user.userId);
+    await user.updateOne({
+      $pull: { product: mongoose.Types.ObjectId(req.params.productId) },
+    });
+    const product = await Product.findById(req.params.productId);
+    await product.deleteOne();
+    res.status(200).json("success delete product");
   } catch (error) {
-    res.status(500).json(error)
+    res.status(500).json(error);
   }
-})
-
+});
 
 module.exports = router;
