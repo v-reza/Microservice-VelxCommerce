@@ -210,13 +210,13 @@ router.post("/callback", async (req, res) => {
   }
 });
 
-//cek transaction by orderId, dan cek transaction status dari local ke midtrans server,
+//cek transaction by transactionId, dan cek transaction status dari local ke midtrans server,
 //jika transaction status dari local database tidak sesuai dengan midtrans server,
 //maka otomatis update transaction status di local db sesuai dengan midtrans server
-router.get("/:orderId", async (req, res) => {
+router.get("/:transactionId", async (req, res) => {
   try {
     const transaction = await Transaction.findOne({
-      order_id: req.params.orderId,
+      transaction_id: req.params.transactionId,
     });
     if (!transaction) {
       return res.status(404).json({
@@ -226,7 +226,7 @@ router.get("/:orderId", async (req, res) => {
     }
 
     const callbackMidtrans = await axios.get(
-      `https://api.sandbox.midtrans.com/v2/${transaction.order_id}/status`,
+      `https://api.sandbox.midtrans.com/v2/${transaction.transaction_id}/status`,
       {
         headers: {
           Authorization: process.env.BASE64_SERVER_KEY,
@@ -243,7 +243,7 @@ router.get("/:orderId", async (req, res) => {
     }
 
     const getNewTransaction = await Transaction.findOne({
-      order_id: req.params.orderId,
+      transaction_id: req.params.transactionId,
     });
 
     const sales = await Sales.findOne({
@@ -258,7 +258,7 @@ router.get("/:orderId", async (req, res) => {
     }
 
     return res.status(200).json({
-      orderId: callbackMidtrans.data.order_id,
+      transactionId: callbackMidtrans.data.transaction_id,
       transactionStatus: transactionMidtrans,
     });
   } catch (error) {
