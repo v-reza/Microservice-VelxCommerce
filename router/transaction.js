@@ -67,11 +67,12 @@ router.post("/", async (req, res) => {
         email: "mrezalf0@gmail.com",
         phone: "08111222333",
       },
-      callbacks: {
-        finish: "https://velxcommerce.netlify.app/checkout/finish",
-        cancel: "https://velxcommerce.netlify.app/checkout/cancel",
-        pending: "https://velxcommerce.netlify.app/checkout/pending",
-      },
+      custom_field1: userId,
+      // callbacks: {
+      //   finish: "https://velxcommerce.netlify.app/checkout/finish",
+      //   cancel: "https://velxcommerce.netlify.app/checkout/cancel",
+      //   pending: "https://velxcommerce.netlify.app/checkout/pending",
+      // },
     };
 
     const transaction = await snap.createTransaction(parameter);
@@ -81,6 +82,72 @@ router.post("/", async (req, res) => {
     });
   } catch (error) {
     res.status(500).json(error);
+  }
+});
+
+router.post("/webhook", async (req, res) => {
+  console.log(req.body)
+  try {
+    const userId = req.body.custom_field1;
+    const findTransaction = await Transaction.findOne({
+      transaction_id: req.body.transaction_id,
+    });
+    const cart = await axios.get(
+      `https://velxapi.herokuapp.com/api/users/cart/${userId}`
+    );
+    let rawCartId = [];
+    await cart.data.map((c) => rawCartId.push({ cartId: c._id }));
+
+    if (!findTransaction) {
+      const transaction = await Transaction.create({
+        transaction_id: req.body.transaction_id,
+        user_id: userId,
+        status_message: req.body.status_message,
+        status_code: req.body.status_code,
+        order_id: req.body.order_id,
+        gross_amount: req.body.gross_amount,
+        payment_type: req.body.payment_type,
+        transaction_status: req.body.transaction_status,
+        transaction_time: req.body.transaction_time,
+        currency: req.body.currency,
+        fraud_status: req.body.fraud_status ? req.body.fraud_status : "",
+        signature_key: req.body.signature_key,
+        pdf_url: req.body.pdf_url ? req.body.pdf_url : "",
+      });
+      const updateTransactionCart = await Transaction.findById(transaction._id);
+      rawCartId.map(async (cart) => {
+        await updateTransactionCart.updateOne({
+          $push: { cart_id: cart.cartId },
+        });
+      });
+    } else {
+      const transaction = await Transaction.findOne({
+        transaction_id: req.body.transaction_id,
+      });
+      await transaction.updateOne({
+        status_message: req.body.status_message,
+        status_code: req.body.status_code,
+        order_id: req.body.order_id,
+        gross_amount: req.body.gross_amount,
+        payment_type: req.body.payment_type,
+        transaction_status: req.body.transaction_status,
+        transaction_time: req.body.transaction_time,
+        currency: req.body.currency,
+        fraud_status: req.body.fraud_status ? req.body.fraud_status : "",
+        signature_key: req.body.signature_key,
+        pdf_url: req.body.pdf_url ? req.body.pdf_url : "",
+      });
+    }
+    await Cart.updateMany(
+      { userId: userId, status_transaction: false },
+      { $set: { status_transaction: true } }
+    );
+    const transaction = await Transaction.findOne({
+      transaction_id: req.body.transaction_id,
+    });
+    res.status(200).json({ transaction });
+  } catch (error) {
+    console.log(error)
   }
 });
 
