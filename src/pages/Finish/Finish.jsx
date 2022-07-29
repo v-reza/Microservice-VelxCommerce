@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import PropTypes from "prop-types";
 import LinearProgress from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
@@ -31,6 +31,7 @@ const Finish = () => {
   };
 
   const [progress, setProgress] = useState(10);
+  const navigate = useNavigate()
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -49,17 +50,20 @@ const Finish = () => {
   //   }
 
   const [queryString] = useSearchParams();
-  const orderId = queryString.get("order_id");
+  const id = queryString.get("id");
   const [transactionStatus, setTransactionStatus] = useState("");
-  const [transactionOrderId, setTransactionOrderId] = useState(null);
+  const [transactionId, setTransactionId] = useState(null);
   useEffect(() => {
     const getTransaction = async () => {
-      const res = await axiosGet(`/transaction/${orderId}`);
+      const res = await axiosGet(`/transaction/${id}`);
+      if (res.data.status === 404) {
+        navigate("/404")
+      }
       setTransactionStatus(res.data.transactionStatus);
-      setTransactionOrderId(res.data.orderId);
+      setTransactionId(res.data.transactionId);
     };
     getTransaction();
-  }, [orderId]);
+  }, [id]);
 
   if (progress === 100) {
     window.location.href = "/transaction"
@@ -80,7 +84,7 @@ const Finish = () => {
       <br/>
       <div className="row">
         <div className="col-md-12" align="center">
-          Your Order Id {transactionOrderId} is {transactionStatus}
+          Your Transaction Id {transactionId} is {transactionStatus}
         </div>
       </div>
     </div>

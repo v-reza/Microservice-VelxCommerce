@@ -39,13 +39,13 @@ const Summary = ({ totalPrice, tax, grandTotal, shipping, chooseShipping }) => {
         );
         window.snap.pay(`${snapToken}`, {
           onSuccess: function (result) {
-            navigate("/checkout/finish?order_id=" + result.order_id);
+            navigate("/checkout/finish?id=" + result.transaction_id);
           },
           onPending: function (result) {
-            navigate("/checkout/finish?order_id=" + result.order_id);
+            navigate("/checkout/finish?id=" + result.transaction_id);
           },
           onError: function (result) {
-            navigate("/checkout/finish?order_id=" + result.order_id);
+            navigate("/checkout/finish?id=" + result.transaction_id);
           },
           onClose: function () {},
         });
