@@ -12,7 +12,7 @@ const Summary = ({ totalPrice, tax, grandTotal, shipping, chooseShipping }) => {
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handlePay = async (e) => {
     e.preventDefault();
@@ -28,51 +28,33 @@ const Summary = ({ totalPrice, tax, grandTotal, shipping, chooseShipping }) => {
 
     await axiosPost("/transaction", {
       userId: user._id,
-      tax: tax
-    }).then((res) => {
-      setLoading(false)
-      const snapToken = res.data.snapToken;
-      window.parent.postMessage(
-        { message: "The message is being set up here" },
-        "*"
-      );
-      window.snap.pay(`${snapToken}`, {
-        onSuccess: function (result) {
-          console.log("disini")
-          axiosPost('/transaction/callback', {
-            result: result,
-            userId: user._id
-          }).then((res) => {
-            navigate("/checkout/finish?order_id=" + res.data.order_id)
-          })
-        },
-        onPending: function (result) {
-          console.log("disini")
-          axiosPost('/transaction/callback', {
-            result: result,
-            userId: user._id
-          }).then((res) => {
-            navigate("/checkout/finish?order_id=" + res.data.order_id)
-          })
-        },
-        onError: function (result) {
-          console.log("disini")
-          axiosPost('/transaction/callback', {
-            result: result,
-            userId: user._id
-          }).then((res) => {
-            navigate("/checkout/finish?order_id=" + res.data.order_id)
-          })
-        },
-        onClose: function () {
-
-        },
-      });
-    }).catch((err) => {
-      setError(true)
-      setToast(true)
-      setMessage("Somethin when wrong when snap pay")
+      tax: tax,
     })
+      .then((res) => {
+        setLoading(false);
+        const snapToken = res.data.snapToken;
+        window.parent.postMessage(
+          { message: "The message is being set up here" },
+          "*"
+        );
+        window.snap.pay(`${snapToken}`, {
+          onSuccess: function (result) {
+            navigate("/checkout/finish?order_id=" + result.order_id);
+          },
+          onPending: function (result) {
+            navigate("/checkout/finish?order_id=" + result.order_id);
+          },
+          onError: function (result) {
+            navigate("/checkout/finish?order_id=" + result.order_id);
+          },
+          onClose: function () {},
+        });
+      })
+      .catch((err) => {
+        setError(true);
+        setToast(true);
+        setMessage("Somethin when wrong when snap pay");
+      });
   };
 
   useEffect(() => {
@@ -84,7 +66,7 @@ const Summary = ({ totalPrice, tax, grandTotal, shipping, chooseShipping }) => {
     script.src = snapSrcUrl;
     script.setAttribute("data-client-key", myMidtransClientKey);
     script.async = true;
-    script.crossOrigin = "anonymous"
+    script.crossOrigin = "anonymous";
     document.body.appendChild(script);
 
     return () => {
