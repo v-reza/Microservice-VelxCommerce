@@ -63,7 +63,7 @@ const Finish = () => {
       setTransactionId(res.data.transactionId);
     };
     getTransaction();
-  }, [id]);
+  }, [id, navigate]);
 
   if (progress === 100) {
     window.location.href = "/transaction"
