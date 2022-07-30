@@ -5,7 +5,7 @@ const ShippingAddress = () => {
     <>
       <h2 className="text-xl font-semibold mb-5">Billing Address</h2>
       <div className="grid md:grid-cols-3 gap-x-3">
-        <div className="mb-4 md:col-span-2">
+        <div className="mb-4 md:col-span-3">
           <label className="block mb-1"> Address* </label>
           <input
             className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
@@ -13,6 +13,8 @@ const ShippingAddress = () => {
             placeholder="Type here"
           />
         </div>
+      </div>
+      <div className="grid md:grid-cols-3 gap-x-3">
         <div className="mb-4 md:col-span-1">
           <label className="block mb-1"> City* </label>
           <div className="relative">
@@ -33,10 +35,8 @@ const ShippingAddress = () => {
             </i>
           </div>
         </div>
-      </div>
-      <div className="grid md:grid-cols-3 gap-x-3">
         <div className="mb-4 md:col-span-1">
-          <label className="block mb-1"> House </label>
+          <label className="block mb-1"> State / Province* </label>
           <input
             className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
             type="text"
@@ -44,15 +44,7 @@ const ShippingAddress = () => {
           />
         </div>
         <div className="mb-4 md:col-span-1">
-          <label className="block mb-1"> Building </label>
-          <input
-            className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
-            type="text"
-            placeholder="Type here"
-          />
-        </div>
-        <div className="mb-4 md:col-span-1">
-          <label className="block mb-1"> ZIP code </label>
+          <label className="block mb-1"> ZIP / Postal Code* </label>
           <input
             className="appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
             type="text"

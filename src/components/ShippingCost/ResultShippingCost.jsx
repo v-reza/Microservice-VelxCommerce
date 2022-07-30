@@ -61,6 +61,10 @@ const ResultShippingCost = ({
     }
   };
 
+  const returnPrice = (price) => {
+    return "$" + (price / IDR).toFixed(2);
+  };
+
   return (
     <>
       <div className="grid sm:grid-cols-3 gap-3 mb-6">
@@ -87,11 +91,10 @@ const ResultShippingCost = ({
             <p className="ml-2">
               <span>{code.toUpperCase()}</span>
               <small className="block text-sm text-gray-400">
-                $
                 {isNaN(list.cost[0].value / IDR) ? (
                   <Skeleton variant="text" />
                 ) : (
-                  (list.cost[0].value / IDR).toFixed(2)
+                  returnPrice(list.cost[0].value)
                 )}{" "}
                 -{" "}
                 {code.toUpperCase() !== "POS"

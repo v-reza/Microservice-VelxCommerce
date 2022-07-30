@@ -132,18 +132,6 @@ export default function Navbar(props) {
                       <Menu.Item>
                         {({ active }) => (
                           <div
-                            className={classNames(
-                              active ? "bg-gray-100" : "",
-                              "block px-4 py-2 text-sm text-gray-700 cursor-pointer"
-                            )}
-                          >
-                            Your Profile
-                          </div>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <div
                             onClick={() =>
                               window.open(
                                 `http://localhost:3100/session/signin?access-token=${token}`,
@@ -163,6 +151,7 @@ export default function Navbar(props) {
                       <Menu.Item>
                         {({ active }) => (
                           <div
+                          onClick={() => navigate("/my-profile")}
                             className={classNames(
                               active ? "bg-gray-100" : "",
                               "block px-4 py-2 text-sm text-gray-700 cursor-pointer"

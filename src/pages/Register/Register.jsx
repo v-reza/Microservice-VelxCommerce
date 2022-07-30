@@ -22,6 +22,7 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [fullname, setFullname] = useState("");
+  const [phone, setPhone] = useState("");
   const navigate = useNavigate();
 
   const { isFetching, error, dispatch } = useContext(AuthContext);
@@ -30,7 +31,7 @@ const Register = () => {
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    if (email === "" || password === "" || fullname === "") {
+    if (email === "" || password === "" || fullname === "" || phone === "") {
       setError(true);
       setMessage("Please fill all the fields");
       return;
@@ -40,6 +41,7 @@ const Register = () => {
       email: email,
       password: password,
       name: fullname,
+      phone: phone,
     })
       .then((res) => {
         setError(false);
@@ -109,6 +111,18 @@ const Register = () => {
                   name="email"
                   autoComplete="email"
                   onChange={(e) => setEmail(e.target.value)}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="phone"
+                  label="Mobile Number"
+                  name="phone"
+                  type={"number"}
+                  autoComplete="phone"
+                  onChange={(e) => setPhone(e.target.value)}
                 />
               </Grid>
               <Grid item xs={12}>

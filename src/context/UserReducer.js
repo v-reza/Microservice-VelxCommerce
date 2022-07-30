@@ -27,7 +27,7 @@ const AuthReducer = (state, action) => {
         isFetching: false,
         error: false,
         token: null,
-      }
+      };
     case "ADD_CART":
       return {
         ...state,
@@ -42,6 +42,14 @@ const AuthReducer = (state, action) => {
         user: {
           ...state.user,
           cart: state.user.cart.filter((cart) => cart !== action.payload),
+        },
+      };
+    case "UPDATE_PROFILE_INFORMATION":
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          ...action.payload,
         },
       };
     default:
