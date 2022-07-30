@@ -14,6 +14,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import Finish from "./pages/Finish/Finish";
 import Home from "./pages/Home/Home";
 import Login from "./pages/Login/Login";
+import MyProfile from "./pages/MyProfile/MyProfile";
 import Notfound from "./pages/Notfound/404";
 import Register from "./pages/Register/Register";
 import Transaction from "./pages/Transaction/Transaction";
@@ -22,7 +23,6 @@ function App() {
   const { user } = useContext(AuthContext);
   const [navbarRefresh, setNavbarRefresh] = useState(false);
   const [isNotfound, setIsNotfound] = useState(false);
-  console.log(navbarRefresh);
 
   return (
     <>
@@ -110,6 +110,10 @@ function App() {
                 <Navigate to="/" replace />
               )
             }
+          />
+          <Route
+            path="/my-profile"
+            element={user ? <MyProfile /> : <Navigate to="/" replace />}
           />
           <Route
             path="/404"

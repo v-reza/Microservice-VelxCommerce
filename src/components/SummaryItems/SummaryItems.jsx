@@ -9,7 +9,7 @@ const SummaryItems = ({ products }) => {
       <h2 className="text-lg font-semibold mb-3">Items in cart</h2>
       {products && products.length === 0
         ? new Array(6).fill(6).map((item, index) => (
-            <>
+            <React.Fragment key={index}>
               <figure className="flex items-center mb-4 leading-5">
                 <div>
                   <div className="block relative w-20 h-70 rounded p-1 border border-gray-200">
@@ -28,7 +28,7 @@ const SummaryItems = ({ products }) => {
                   </p>
                 </figcaption>
               </figure>
-            </>
+            </React.Fragment>
           ))
         : products.map((product) => (
             <figure className="flex items-center mb-4 leading-5" key={product._id}>

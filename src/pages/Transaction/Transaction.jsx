@@ -1,6 +1,6 @@
-import { Button, Grid, LinearProgress } from "@mui/material";
+import { Button, Grid, LinearProgress, Skeleton } from "@mui/material";
 import axios from "axios";
-import React, { Suspense,useContext, useEffect, useState } from "react";
+import React, { Suspense, useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../context/UserContext";
 import Backdrop from "@mui/material/Backdrop";
 import Box from "@mui/material/Box";
@@ -92,7 +92,7 @@ const Transaction = () => {
     setLoading(true);
 
     const res = await axiosGet(`/transaction/${orderId}`);
-    console.log(res.data)
+    console.log(res.data);
     if (res.data.status === 404) {
       setRefresh(true);
       setLoading(false);
@@ -191,6 +191,10 @@ const Transaction = () => {
     }
   };
 
+  const returnPrice = (price) => {
+    return "$" + (price / IDR).toFixed(2);
+  };
+
   return (
     <div className="container-fluid mt-3">
       <button
@@ -236,7 +240,11 @@ const Transaction = () => {
                     </th>
                     <td class="py-4 px-6">{t.payment_type}</td>
                     <td class="py-4 px-6">
-                      ${(t.gross_amount / IDR).toFixed(2)}
+                      {isNaN(t.gross_amount / IDR) ? (
+                        <Skeleton variant="text" />
+                      ) : (
+                        returnPrice(t.gross_amount)
+                      )}
                     </td>
                     <td class="py-4 px-6">
                       {contentTransactionStatus(t.transaction_status)}
@@ -273,7 +281,7 @@ const Transaction = () => {
                               <Box sx={style}>
                                 {/* Payment Type Gopay */}
                                 {qrCodeGopay && (
-                                  <Suspense fallback={<LinearProgress/>}>
+                                  <Suspense fallback={<LinearProgress />}>
                                     <Grid
                                       container
                                       spacing={0}

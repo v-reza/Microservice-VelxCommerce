@@ -55,12 +55,13 @@ const Finish = () => {
   const [transactionId, setTransactionId] = useState(null);
   useEffect(() => {
     const getTransaction = async () => {
-      const res = await axiosGet(`/transaction/${id}`);
-      if (res.data.status === 404) {
+      try {
+        const res = await axiosGet(`/transaction/${id}`);
+        setTransactionStatus(res.data.transactionStatus);
+        setTransactionId(res.data.transactionId);
+      } catch (error) {
         navigate("/404")
       }
-      setTransactionStatus(res.data.transactionStatus);
-      setTransactionId(res.data.transactionId);
     };
     getTransaction();
   }, [id, navigate]);
@@ -84,7 +85,7 @@ const Finish = () => {
       <br/>
       <div className="row">
         <div className="col-md-12" align="center">
-          Your Transaction Id {transactionId} is {transactionStatus}
+          Your Transaction Id {id} is {transactionStatus}
         </div>
       </div>
     </div>

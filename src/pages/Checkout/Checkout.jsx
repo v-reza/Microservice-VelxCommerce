@@ -1,5 +1,6 @@
 import { LinearProgress } from "@mui/material";
 import React, { useContext, useEffect, useState, lazy, Suspense } from "react";
+import { useNavigate } from "react-router-dom";
 import PersonalInformation from "../../components/PersonalInformation/PersonalInformation";
 import ShippingAddress from "../../components/ShippingAddress/ShippingAddress";
 import ShippingCost from "../../components/ShippingCost/ShippingCost";
@@ -30,6 +31,7 @@ const Checkout = ({ navbarRefresh, setNavbarRefresh }) => {
   /* Shipping Cost */
   const [city, setCity] = useState([]);
   const [chooseShipping, setChooseShipping] = useState([]);
+  const navigate = useNavigate();
 
   /**
    * Get product for summary items
@@ -38,6 +40,16 @@ const Checkout = ({ navbarRefresh, setNavbarRefresh }) => {
     const getProducts = async () => {
       try {
         const fetchCart = await axiosGet(`/users/cart/${user._id}`);
+        if (fetchCart.data.length === 0) {
+          setError(true);
+          setLoading(false);
+          setToast(true);
+          setMessage("Your cart is empty, you will be redirected to home page");
+          setTimeout(() => {
+            navigate("/");
+          }, 4000);
+          return;
+        }
         setProducts(fetchCart.data);
       } catch (error) {
         setToast(true);
@@ -47,7 +59,7 @@ const Checkout = ({ navbarRefresh, setNavbarRefresh }) => {
     };
     getProducts();
     setRefresh(false);
-  }, [user._id, navbarRefresh, refresh]);
+  }, [user._id, navbarRefresh, refresh, navigate]);
 
   /**
    * Get Total Price for Summary
@@ -96,7 +108,7 @@ const Checkout = ({ navbarRefresh, setNavbarRefresh }) => {
               <main className="md:w-2/3">
                 <article className="border border-gray-200 bg-white shadow-sm rounded p-4 lg:p-6 mb-5">
                   {/* Personal Information */}
-                  <PersonalInformation />
+                  <PersonalInformation user={user}/>
                   <hr className="my-4" />
                   {/* Shipping Cost */}
                   <ShippingCost
