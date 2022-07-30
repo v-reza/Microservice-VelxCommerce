@@ -16,6 +16,7 @@ router.post("/register", async (req, res) => {
       email: req.body.email,
       password: encryptedPassword,
       name: req.body.name,
+      phone: req.body.phone
     });
 
     const token = jwt.sign(

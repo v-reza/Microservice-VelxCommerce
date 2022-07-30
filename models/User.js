@@ -30,6 +30,10 @@ const UserSchema = new mongoose.Schema(
     isOpenStore: {
       type: Boolean,
       default: false
+    },
+    phone: {
+      type: Number,
+      default: null
     }
   },
   { timestamps: true }

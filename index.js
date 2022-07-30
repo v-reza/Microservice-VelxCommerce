@@ -20,6 +20,7 @@ const transactionRoute = require("./router/transaction");
 const salesRoute = require("./router/sales");
 const conversationsRoute = require("./router/conversations");
 const messagesRoute = require("./router/messages");
+const addressRoute = require("./router/address");
 
 dotenv.config();
 
@@ -90,6 +91,7 @@ app.use("/api/transaction", transactionRoute);
 app.use("/api/sales", salesRoute);
 app.use("/api/conversations", conversationsRoute);
 app.use("/api/messages", messagesRoute);
+app.use("/api/address", addressRoute);
 app.get("/api/storeToken", verifyBearerToken, (req, res) => {
   res.status(200).json(req.user);
 });

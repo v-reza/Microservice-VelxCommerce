@@ -3,6 +3,7 @@ const User = require("../models/User");
 const Cart = require("../models/Cart");
 const Product = require("../models/Product");
 const mongoose = require("mongoose");
+const verifyBearerToken = require("../config/verifyBearerToken");
 
 router.get("/:id", async (req, res) => {
   try {
@@ -10,6 +11,19 @@ router.get("/:id", async (req, res) => {
     return res.status(200).json(user);
   } catch (error) {
     res.status(500).json(error);
+  }
+});
+
+router.put("/", verifyBearerToken, async (req, res) => {
+  try {
+    const user = await User.findOne({
+      _id: mongoose.Types.ObjectId(req.user.userId),
+    });
+    await user.updateOne(req.body);
+    const userUpdate = await User.findById(req.user.userId);
+    return res.status(200).json(userUpdate);
+  } catch (error) {
+    return res.status(500).json(error);
   }
 });
 
@@ -167,6 +181,5 @@ router.put("/cart/:cartId/change/quantity", async (req, res) => {
     res.status(500).json(error);
   }
 });
-
 
 module.exports = router;
