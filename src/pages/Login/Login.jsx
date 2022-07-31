@@ -37,7 +37,6 @@ const Login = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSubmit = useCallback((e) => {
     e.preventDefault();
-    console.log(email.current.value);
     loginCall(
       {
         email: email.current.value,
