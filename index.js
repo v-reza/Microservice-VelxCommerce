@@ -3,6 +3,8 @@ const options = {
   cors: true,
   origin: ["http://localhost:3000", "https://velxcommerce.netlify.app/"],
   origins: ["http://localhost:3000", "https://velxcommerce.netlify.app/"],
+  pingInterval: 250,
+  pingTimeout: 250
 };
 
 const io = require("socket.io")(server, options);
