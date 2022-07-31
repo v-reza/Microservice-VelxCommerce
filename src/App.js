@@ -6,6 +6,7 @@ import {
   Navigate,
 } from "react-router-dom";
 import HomeSection from "./components/HomeSection/HomeSection";
+import ChatIcon from "./components/Message/ChatIcon";
 import Navbar from "./components/Navbar/Navbar";
 import ProductDetail from "./components/ProductDetail/ProductDetail";
 import { AuthContext } from "./context/UserContext";
@@ -17,6 +18,7 @@ import Login from "./pages/Login/Login";
 import MyProfile from "./pages/MyProfile/MyProfile";
 import Notfound from "./pages/Notfound/404";
 import Register from "./pages/Register/Register";
+import Example from "./pages/Tailwind/Example";
 import Transaction from "./pages/Transaction/Transaction";
 
 function App() {
@@ -27,6 +29,7 @@ function App() {
   return (
     <>
       <Router>
+        {user && <ChatIcon />}
         {user ? (
           !isNotfound ? (
             <Navbar
@@ -114,6 +117,10 @@ function App() {
           <Route
             path="/my-profile"
             element={user ? <MyProfile /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/tailwind"
+            element={user ? <Example /> : <Navigate to="/" replace />}
           />
           <Route
             path="/404"

@@ -57,12 +57,12 @@ export default function NewAddress({
     setDisabledCity(false);
 
     const provinceName = await axios.get(
-      "http://dev.farizdotid.com/api/daerahindonesia/provinsi/" + provinceId
+      "https://dev.farizdotid.com/api/daerahindonesia/provinsi/" + provinceId
     );
     setSelectedProvinceName(provinceName.data.nama);
 
     const res = await axios.get(
-      "http://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=" +
+      "https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=" +
         provinceId
     );
     setListCity(res.data.kota_kabupaten);
@@ -71,7 +71,7 @@ export default function NewAddress({
   const onChangeCity = async (cityId) => {
     setSelectedCityId(cityId);
     const cityName = await axios.get(
-      "http://dev.farizdotid.com/api/daerahindonesia/kota/" + cityId
+      "https://dev.farizdotid.com/api/daerahindonesia/kota/" + cityId
     );
 
     setSelectedCityName(cityName.data.nama);
@@ -125,7 +125,7 @@ export default function NewAddress({
   useEffect(() => {
     const getProvince = async () => {
       const res = await axios.get(
-        "http://dev.farizdotid.com/api/daerahindonesia/provinsi"
+        "https://dev.farizdotid.com/api/daerahindonesia/provinsi"
       );
       setListProvince(res.data.provinsi);
     };

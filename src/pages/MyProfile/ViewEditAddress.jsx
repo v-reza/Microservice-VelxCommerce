@@ -32,13 +32,13 @@ export default function ViewEditAddress({
     setSelectedProvinceId(provinceId);
 
     const provinceName = await axios.get(
-      "http://dev.farizdotid.com/api/daerahindonesia/provinsi/" + provinceId
+      "https://dev.farizdotid.com/api/daerahindonesia/provinsi/" + provinceId
     );
 
     setSelectedProvinceName(provinceName.data.nama);
 
     const res = await axios.get(
-      "http://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=" +
+      "https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=" +
         provinceId
     );
     setListCity(res.data.kota_kabupaten);
@@ -47,7 +47,7 @@ export default function ViewEditAddress({
   const onChangeCity = async (cityId) => {
     setSelectedCityId(cityId);
     const cityName = await axios.get(
-      "http://dev.farizdotid.com/api/daerahindonesia/kota/" + cityId
+      "https://dev.farizdotid.com/api/daerahindonesia/kota/" + cityId
     );
 
     setSelectedCityName(cityName.data.nama);
@@ -56,7 +56,7 @@ export default function ViewEditAddress({
   useEffect(() => {
     const getProvince = async () => {
       const res = await axios.get(
-        "http://dev.farizdotid.com/api/daerahindonesia/provinsi"
+        "https://dev.farizdotid.com/api/daerahindonesia/provinsi"
       );
       const filterProvince = res.data.provinsi.filter((item) => {
         return item.nama === listAddress.province;
@@ -65,7 +65,7 @@ export default function ViewEditAddress({
       setListProvince(res.data.provinsi);
 
       const resCity = await axios.get(
-        "http://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=" +
+        "https://dev.farizdotid.com/api/daerahindonesia/kota?id_provinsi=" +
           filterProvince[0]?.id
       );
       const filterCity = resCity.data.kota_kabupaten.filter((item) => {
