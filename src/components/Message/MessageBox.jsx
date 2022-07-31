@@ -16,7 +16,6 @@ const MessageBox = ({
 }) => {
   const { user } = useContext(AuthContext);
   const scrollRef = useRef();
-  console.log(messages)
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);

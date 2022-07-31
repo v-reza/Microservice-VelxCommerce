@@ -92,7 +92,6 @@ const Transaction = () => {
     setLoading(true);
 
     const res = await axiosGet(`/transaction/${orderId}`);
-    console.log(res.data);
     if (res.data.status === 404) {
       setRefresh(true);
       setLoading(false);
