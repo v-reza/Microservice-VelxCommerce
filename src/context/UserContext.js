@@ -29,7 +29,7 @@ export const AuthContextProvider = ({ children }) => {
                 }).catch((err) => {
                     localStorage.removeItem("user")
                     localStorage.removeItem("access-token")
-                    // navigate("/")
+                    window.location.reload()
                 })
             }
         }
