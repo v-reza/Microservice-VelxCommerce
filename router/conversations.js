@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const verifyBearerToken = require("../config/verifyBearerToken");
 const Conversation = require("../models/Conversation");
 
 /**
@@ -24,7 +25,7 @@ router.post("/", async (req, res) => {
 /**
  * Get Conversation of user
  */
-router.get("/:userId", async (req, res) => {
+router.get("/:userId", verifyBearerToken, async (req, res) => {
   try {
     const conversation = await Conversation.find({
       members: {
@@ -40,12 +41,15 @@ router.get("/:userId", async (req, res) => {
 /**
  * get conversation includes to userId
  */
-router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
+router.get("/find/:secondUserId", verifyBearerToken, async (req, res) => {
   try {
+    const members = [req.user.userId, req.params.secondUserId];
+    const reverseMembers = [req.params.secondUserId, req.user.userId];
     const conversation = await Conversation.findOne({
-      members: { $in: [req.params.firstUserId, req.params.secondUserId] },
+      $or: [{ members: members }, { members: reverseMembers }],
     });
-    res.status(200).json(conversation)
+    console.log(conversation);
+    res.status(200).json(conversation);
   } catch (error) {
     res.status(500).json(error);
   }
