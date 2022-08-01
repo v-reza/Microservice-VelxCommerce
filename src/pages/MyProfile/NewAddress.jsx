@@ -32,6 +32,7 @@ export default function NewAddress({
   setMessage,
   setLoading,
   setError,
+  setRefreshProfile
 }) {
   const [streetAddress, setStreetAddress] = useState("");
   const [selectedProvinceId, setSelectedProvinceId] = useState(null);
@@ -111,6 +112,7 @@ export default function NewAddress({
           },
         }
       );
+      setRefreshProfile(true);
       setLoading(false);
       setToast(true);
       setMessage("Success add new address");

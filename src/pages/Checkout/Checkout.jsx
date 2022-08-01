@@ -1,6 +1,8 @@
 import { LinearProgress } from "@mui/material";
-import React, { useContext, useEffect, useState, lazy, Suspense } from "react";
+import React, { useContext, useEffect, useState, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
+import Footer from "../../components/Footer/Footer";
+import PaymentGateway from "../../components/PaymentGateway/PaymentGateway";
 import PersonalInformation from "../../components/PersonalInformation/PersonalInformation";
 import ShippingAddress from "../../components/ShippingAddress/ShippingAddress";
 import ShippingCost from "../../components/ShippingCost/ShippingCost";
@@ -9,9 +11,6 @@ import { AuthContext } from "../../context/UserContext";
 import Loading from "../../custom/Loading/Loading";
 import Toast from "../../custom/Toast/Toast";
 import { axiosGet } from "../../helper/axiosHelper";
-const SummaryItems = lazy(() =>
-  import("../../components/SummaryItems/SummaryItems")
-);
 
 const Checkout = ({ navbarRefresh, setNavbarRefresh }) => {
   const { user } = useContext(AuthContext);
@@ -32,6 +31,9 @@ const Checkout = ({ navbarRefresh, setNavbarRefresh }) => {
   const [city, setCity] = useState([]);
   const [chooseShipping, setChooseShipping] = useState([]);
   const navigate = useNavigate();
+
+  /* Shipping Address */
+  const [chooseShippingAddress, setChooseShippingAddress] = useState([]);
 
   /**
    * Get product for summary items
@@ -108,7 +110,7 @@ const Checkout = ({ navbarRefresh, setNavbarRefresh }) => {
               <main className="md:w-2/3">
                 <article className="border border-gray-200 bg-white shadow-sm rounded p-4 lg:p-6 mb-5">
                   {/* Personal Information */}
-                  <PersonalInformation user={user}/>
+                  <PersonalInformation user={user} />
                   <hr className="my-4" />
                   {/* Shipping Cost */}
                   <ShippingCost
@@ -118,35 +120,32 @@ const Checkout = ({ navbarRefresh, setNavbarRefresh }) => {
                   />
                   <hr className="my-4" />
                   {/* Billing Address */}
-                  <ShippingAddress />
-                  <div className="flex justify-end space-x-2">
-                    <div className="cursor-pointer px-5 py-2 inline-block text-gray-700 bg-white shadow-sm border border-gray-200 rounded-md hover:bg-gray-100 hover:text-blue-600">
-                      Back
-                    </div>
-                    <div className="cursor-pointer px-5 py-2 inline-block text-white bg-green-600 border border-transparent rounded-md hover:bg-green-700">
-                      Continue
-                    </div>
-                  </div>
+                  <ShippingAddress
+                    setToast={setToast}
+                    setError={setError}
+                    setMessage={setMessage}
+                    setLoading={setLoading}
+                    setChooseShippingAddress={setChooseShippingAddress}
+                  />
+                  <hr className="my-4" />
+                  <PaymentGateway />
                 </article>
               </main>
               <aside className="md:w-1/3">
-                <article className="text-gray-600" style={{ maxWidth: 350 }}>
-                  {/* Summary */}
-                  <Summary
-                    totalPrice={totalPrice}
-                    grandTotal={grandTotal}
-                    tax={tax}
-                    shipping={priceShipping}
-                    chooseShipping={chooseShipping}
-                  />
-                  <hr className="my-4" />
-                  {/* Summary Items */}
-                  <SummaryItems products={products} />
-                </article>
+                <Summary
+                  totalPrice={totalPrice}
+                  grandTotal={grandTotal}
+                  tax={tax}
+                  shipping={priceShipping}
+                  chooseShipping={chooseShipping}
+                  products={products}
+                  chooseShippingAddress={chooseShippingAddress}
+                />
               </aside>
             </div>
           </div>
         </section>
+        <Footer />
       </Suspense>
       <Toast
         open={isToast}
