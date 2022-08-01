@@ -23,7 +23,7 @@ const snap = new midtransClient.Snap({
 //buat transcation detail and send to midtrans server
 router.post("/", async (req, res) => {
   try {
-    const { userId, tax } = req.body;
+    const { userId, tax, shippingAddress } = req.body;
     const items = [];
     const amountPrice = [];
     const currency = await axios.get(process.env.CURRENCY_URL);
@@ -31,6 +31,10 @@ router.post("/", async (req, res) => {
     const cart = await axios.get(
       `https://velxapi.herokuapp.com/api/users/cart/${userId}`
     );
+    console.log(shippingAddress);
+    const user = await User.findById(userId);
+    const firstname = user.name.split(" ")[0];
+    const lastname = user.name.split(" ")[1];
     await cart.data.map((res) => {
       items.push({
         id: res._id,
@@ -62,10 +66,20 @@ router.post("/", async (req, res) => {
       },
       item_details: items,
       customer_details: {
-        first_name: "Reza",
-        last_name: "Midtrans",
-        email: "mrezalf0@gmail.com",
-        phone: "08111222333",
+        first_name: firstname,
+        last_name: lastname,
+        email: user.email,
+        phone: user.phone ? "+62" + user.phone : "+6289652766610",
+        shipping_address: {
+          first_name: firstname,
+          last_name: lastname,
+          email: user.email,
+          phone: user.phone ? "+62" + user.phone : "+6289652766610",
+          address: shippingAddress.address,
+          city: shippingAddress.city,
+          postal_code: shippingAddress.zipcode,
+          country_code: "IDN",
+        },
       },
       custom_field1: userId,
       // callbacks: {
@@ -86,7 +100,7 @@ router.post("/", async (req, res) => {
 });
 
 router.post("/webhook", async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
   try {
     const userId = req.body.custom_field1;
     const findTransaction = await Transaction.findOne({
@@ -147,7 +161,7 @@ router.post("/webhook", async (req, res) => {
     });
     res.status(200).json({ transaction });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 });
 
