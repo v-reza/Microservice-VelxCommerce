@@ -16,25 +16,35 @@ const PersonalInformation = ({ user }) => {
           />
         </div>
       </div>
-      <div className="grid lg:grid-cols-2 gap-x-3">
+      <div className="grid grid-cols-1 gap-x-3">
+        <div className="mb-4">
+          <label className="block mb-1"> Phone Number </label>
+          <input
+            className="cursor-not-allowed appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
+            type="text"
+            placeholder="Type here"
+            value={user.phone}
+            disabled
+          />
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-x-3">
+        <div className="mb-4">
+          <label className="block mb-1"> Email </label>
+          <input
+            className="cursor-not-allowed appearance-none border border-gray-200 bg-gray-100 rounded-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400 w-full"
+            type="text"
+            placeholder="Type here"
+            value={user.email}
+            disabled
+          />
+        </div>
+      </div>
+
+      {/* <div className="grid lg:grid-cols-2 gap-x-3">
         <div className="mb-4">
           <label className="block mb-1"> Phone </label>
-          <div className="flex  w-full">
-            <input
-              className="cursor-not-allowed appearance-none w-24 border border-gray-200 bg-gray-100 rounded-tl-md rounded-bl-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400"
-              type="text"
-              placeholder="Code"
-              defaultValue={+62}
-              disabled
-            />
-            <input
-              className="cursor-not-allowed appearance-none flex-1 border border-gray-200 bg-gray-100 rounded-tr-md rounded-br-md py-2 px-3 hover:border-gray-400 focus:outline-none focus:border-gray-400"
-              type="text"
-              placeholder="Type phone"
-              value={user.phone}
-              disabled
-            />
-          </div>
+          <div className="flex w-full"></div>
         </div>
         <div className="mb-4">
           <label className="block mb-1"> Email </label>
@@ -46,14 +56,19 @@ const PersonalInformation = ({ user }) => {
             disabled
           />
         </div>
+      </div> */}
+      <div className="py-3 lg:pt-6 lg:pb-16 lg:col-start-1 lg:col-span-2 lg:border-r lg:border-gray-200 lg:pr-8">
+        {/* Description and details */}
+        <div>
+          <div className="space-y-6">
+            <span className="text-base text-gray-500">
+              {" "}
+              This Personal Information a permanent data, If you want update data
+              profile go to Settings{" "}
+            </span>
+          </div>
+        </div>
       </div>
-      <label className="flex items-center w-max my-4">
-        {/* <input defaultChecked="" name="" type="checkbox" className="h-4 w-4" /> */}
-        <span className="ml-2 inline-block text-gray-500">
-          {" "}
-          If you want update data profile go to Settings{" "}
-        </span>
-      </label>
     </>
   );
 };

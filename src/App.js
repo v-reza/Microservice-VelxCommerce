@@ -29,7 +29,7 @@ function App() {
   return (
     <>
       <Router>
-        {user && <ChatIcon />}
+        {user && (<ChatIcon /> )}
         {user ? (
           !isNotfound ? (
             <Navbar
